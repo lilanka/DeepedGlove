@@ -1,5 +1,4 @@
 # AI based energy optimization solution
-
 Inputs -> System -> outputs
 
 ## System
@@ -20,18 +19,20 @@ Reward function is contained following parameters (assuming there will be feedba
 * Number of gloves manufactured in a given day (GN)
 * Temperature inside the plant/human factor (HF)
 
+Reward (R) = (w1 * Q) + (w2 * GN) - (w3 * EC) - (w4 * HF)
+
 Since the quality varies with bath to batch, the feedback should be given everytime there is a batch output. 
 The Energy consumption (EC) is captured in terms of electricity consumption and CO2 emission.
 
 ## Input
-* Temperature values
-* Motor control values
-* Level control values
-* Motor control values
-* Glove type
+* Temperature values (t1-t2) <- floats
+* Motor control values (m1-m2) <- floats
+* Level control values (l1-l2) <- floats
+* Flow control values (f1-f2) <- floats
+* Glove type (string)
 
 ## Output 
-* Recomended motor control values
-* Recomended temperature control values
-* Recomended level control values
-* Recomended flow control valeus
+* Recomended motor control values (M1-M2) <- float
+* Recomended temperature control values (T1-T2) <- float
+* Recomended level control values (L1-L2) <- float
+* Recomended flow control valeus (F1-F2) <- float
