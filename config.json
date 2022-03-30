@@ -1,38 +1,109 @@
 {
-  "name": "w2_opt",
-  "n_gpu": 0,
+  "sim": {
+    "tac_dip": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
 
-  "arch": {
-    "type": "MuZero",
-    "args": {}
-  },
+    "leaching_tank_1": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
 
-  "control_params": {
-    "n_temperature": 16,
-    "n_level": 11,
-    "n_motor": 1,
-    "flow": 0
-  },
+    "leaching_tank_2": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
 
-  "revloss": "cross_entropy",
-  "loss": "mse_loss",
-  "metrics": [
-    "accuracy", "top_k_acc"
-  ],
+    "glove_tank": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
 
-  "lr_scheduler": {
-    "type": "StepLR",
-    "args": {
-      "step_size": 20,
-      "gamma": 0.1
+    "adhesive_tank": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    }, 
+
+    "couglant_tank": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "horizontal_brush": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "round_brush": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "hot_rinse": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "curing_oven_1": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "curing_oven_2": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "curing_oven_3": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "curing_oven_4": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "pre_leaching_tank_1": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "pre_leaching_tank_2": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "pre_leaching_tank_3": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
+    },
+
+    "polimer_tank": {
+      "motors": { "high": 12, "low": 0 }, 
+      "temp": { "high": 100, "low": 0 },
+      "flow": { "high": 23, "low": 0 }
     }
-  }, 
+  },
 
-  "trainer": {
-    "epochs": 16,
-    "save_dir": "saved/",
-    "save_period": 1,
-    "early_stop": 10,
-    "tensorboard": true
+  "algo": {
+    
   }
 }
