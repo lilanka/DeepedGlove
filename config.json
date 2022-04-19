@@ -1,105 +1,105 @@
 {
   "sim": {
     "tac_dip": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "leaching_tank_1": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "leaching_tank_2": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "glove_tank": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "adhesive_tank": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     }, 
 
     "couglant_tank": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "horizontal_brush": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "round_brush": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "hot_rinse": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "curing_oven_1": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "curing_oven_2": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "curing_oven_3": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "curing_oven_4": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "pre_leaching_tank_1": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "pre_leaching_tank_2": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "pre_leaching_tank_3": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     },
 
     "polimer_tank": {
-      "motors": { "high": 12, "low": 0 }, 
-      "temp": { "high": 100, "low": 0 },
-      "flow": { "high": 23, "low": 0 }
+      "motor_range": { "high": 12, "low": 0 }, 
+      "temperature_range": { "high": 100, "low": 0 },
+      "flow_range": { "high": 23, "low": 0 }
     }
   },
 

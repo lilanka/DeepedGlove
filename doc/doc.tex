@@ -1,0 +1,87 @@
+\documentclass{article}
+
+\usepackage[margin=0.5in]{geometry}
+\usepackage{pgfmath}
+\usepackage{pgfcalendar}
+\usepackage[utf8]{inputenc}
+
+\usepackage{lucida}
+% \usepackage{stix}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{tikz-cd}
+
+% figure support
+\usepackage{pgfplots}
+\usepackage{import}
+\usepackage[shortlabels]{enumitem}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+\usepackage{transparent}
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{soul}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\Z}{\mathbb Z}
+
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{fontawesome}
+\usepackage{xifthen}% provides \isempty test
+\newcommand\pdfref[3]{%
+    \href{phd://open-paper?id=#1&page=#2}{%
+    \textup{[\textbf{\ifthenelse{\isempty{#3}}{here}{#3}}]}}%
+}
+\newcommand\urlref[2]{%
+    \href{#1}{\raisebox{0.15ex}{\scriptsize \faLink}\:\textup{\textbf{#2}}}%
+}
+\newcommand\absolutefileref[2]{%
+    \href{run:#1}{\raisebox{0.15ex}{\scriptsize \faFile}\:\textup{\textbf{#2}}}%
+}
+
+% this will contain the current date in yyyy-mm-dd format
+\def\formatteddate{}
+\newcommand\fileref[2]{
+    \IfFileExists{./\formatteddate/#1}{
+        \absolutefileref{./\formatteddate/#1}{#2}
+    }{
+        \textcolor{gray}{\absolutefileref{./\formatteddate/#1}{#2}}
+    }
+}
+\newcommand{\xournal}{\fileref{note.xoj}{Handwritten notes}}%
+
+\let\d=\pgfcalendarshorthand
+\newcommand\formatdate[2]{\pgfcalendar{cal}{#1}{#1}{#2}}
+
+\newcommand\firstdate{\year-\month-\day+-14}
+\newcommand\lastdate{\year-\month-\day}
+
+\newcommand\grayrule{{\color{gray} \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}}}
+
+\begin{document}
+\begin{center}
+    \huge{DeepedGlove}\\[0.4em]
+    \Large{Deep learning Based Energy Optimization Q2 Plant.}\\[0.2em]
+\end{center}
+
+%\newpage
+%\tableofcontents
+
+% -----------------------------------------------------------------------------------------------------------
+\section{Introduction}
+This model is based on the \href{https://arxiv.org/pdf/2102.11492.pdf}{paper}.
+
+\end{document}
