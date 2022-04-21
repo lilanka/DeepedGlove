@@ -30,9 +30,5 @@ The Energy consumption (EC) is captured in terms of electricity consumption and 
 * Level control values (l1-l2) <- floats
 * Flow control values (f1-f2) <- floats
 * Glove type (string)
-
-## Output 
-* Recomended motor control values (M1-M2) <- float
-* Recomended temperature control values (T1-T2) <- float
-* Recomended level control values (L1-L2) <- float
-* Recomended flow control valeus (F1-F2) <- float
+temize}
+flow control valeus (F1-F2) <- float
