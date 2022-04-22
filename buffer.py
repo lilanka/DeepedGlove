@@ -15,13 +15,13 @@ class Buffer(object):
     obs_space: Observation space
     action_space: Action space
     device: Pytorch device to which the values will be converted
+    n_costs: Number of cost functions
     otimize_mem_usage: https://github.com/DLR-RM/stable-baselines3/pull/28#issuecomment-637559274
 
-  Buffer has the type {'s','a','ns', 'r'}. 
-  Cost functions hasn't added yet.
+  Buffer has the type {'s','a','ns', 'r', c}. 
   """
 
-  def __init__(self, buffer_size: int, observation_space, action_space, optimize_mem_usage: bool, device: Union[torch.device, str] = 'cpu'):
+  def __init__(self, buffer_size: int, observation_space, action_space, n_costs: int, optimize_mem_usage: bool, device: Union[torch.device, str] = 'cpu'):
 
     # Check that the replay buffer can fit into the memory
     if psutil is not None:
@@ -32,6 +32,7 @@ class Buffer(object):
     self.action_space = action_space
     self.obs_dim = observation_space.shape
     self.action_dim = action_space.shape
+    self.n_costs = n_costs 
     self.device = device
     self.optimize_mem_usage = optimize_mem_usage
 
@@ -42,6 +43,7 @@ class Buffer(object):
     self.observations = np.zeros((self.buffer_size, self.obs_dim[0], self.obs_dim[1])) 
     self.actions = np.zeros((self.buffer_size, self.action_dim[0], self.action_dim[1]))
     self.rewards = np.zeros((self.buffer_size, 1))
+    self.costs = np.zeros((self.buffer_size, n_costs))
 
     if optimize_mem_usage:
       # observations contains also the next observation
@@ -50,10 +52,10 @@ class Buffer(object):
       self.next_observations = np.zeros(self.observations.shape)
 
     if psutil is not None:
-      total_memory_usage = self.observations.nbytes + self.actions.nbytes +  self.rewards.nbytes
+      total_memory_usage = self.observations.nbytes + self.actions.nbytes +  self.rewards.nbytes + self.costs.nbytes
       
       if not self.optimize_mem_usage:
-        totoal_memory_usage += self.next_observations.nbytes        
+        total_memory_usage += self.next_observations.nbytes        
 
       if total_memory_usage > mem_available:
         warnings.warn(f'Not enough memory. Buffer size {total_memory_usage / 1e9}GB > Memory available {mem_available / 1e9}GB') 
@@ -64,7 +66,7 @@ class Buffer(object):
       return self.buffer_size
     return self.end_position
 
-  def add(self, obs: np.ndarray, action: np.ndarray, next_obs: np.ndarray, reward: np.ndarray) -> None:
+  def add(self, obs: np.ndarray, action: np.ndarray, next_obs: np.ndarray, reward: np.ndarray, cost: np.ndarray) -> None:
     """Add elements to the buffer"""
 
     if self.is_buffer_full:
@@ -74,6 +76,7 @@ class Buffer(object):
     self.observations[self.end_position] = np.array(obs).copy()
     self.actions[self.end_position] = np.array(action).copy()
     self.rewards[self.end_position] = np.array(reward).copy()
+    self.costs[self.end_position] = np.array(cost).copy()
 
     if self.optimize_mem_usage:
       self.observations[(self.end_position + 1) % self.buffer_size] = np.array(next_obs).copy()
@@ -101,49 +104,28 @@ class Buffer(object):
       next_obs = self.observations[(batch_idxs + 1) % self.buffer_size, :]
     else:
       next_obs = self.observations[batch_idxs, :]
-
+    debug(batch_idxs, "batch ids")
     data = (
       self.observations[batch_idxs, :],
       self.actions[batch_idxs, :],
       next_obs,
-      self.rewards[batch_idxs].reshape(-1, 1)
+      self.rewards[batch_idxs].reshape(-1, 1),
+      self.costs[batch_idxs]
     )
     return data 
 
 if __name__ == '__main__':
-  buffer = Buffer(10, np.ones((1, 10)), np.ones((1, 10)), True, device='cpu')
+  buffer = Buffer(10, np.ones((1, 10)), np.ones((1, 10)), 10, True, device='cpu')
 
   obs = np.random.randint(1, 100, size=10)
   actions = np.random.randint(1, 100, size=10)
   next_obs = np.random.randint(1, 100, size=10)
   rewards = np.ones((10, 1))
+  cost = np.ones((1, 10)) + 4.2
   
-  buffer.add(obs, actions, next_obs, [1])
-  buffer.add(obs, actions, next_obs, [10])
-  buffer.add(obs, actions, next_obs, [2])
+  buffer.add(obs, actions, next_obs, [1], cost)
+  buffer.add(obs, actions, next_obs, [10], cost)
+  buffer.add(obs, actions, next_obs, [2], cost)
 
   data = buffer.sample(1)
   debug(data, 'data')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
