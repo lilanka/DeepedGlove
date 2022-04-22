@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 class LSTM(nn.Module):
   def __init__(self, input_dimension, output_dimension, neurons, num_layers=1, label_width=None): 
