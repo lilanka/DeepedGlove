@@ -8,3 +8,6 @@ Energy optimization of Q2 plant PG. The documentation of the system can be found
 
 ### Notes for developers
 * `Buffer` is based on `numpy.array` type. Everything else is based on `torch.Tensor` type.
+
+### TODO
+* Add to the paper `https://arxiv.org/pdf/1909.01792.pdf` on Simulator section and references.
