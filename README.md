@@ -1,8 +1,8 @@
 # DeepedGlove 
-Energy optimization of Q2 plant PG. The documentation of the system can be found on `doc/doc.md`.
+Energy optimization of Q2 plant PG. The documentation of the system can be found on `doc/doc.pdf`.
 
 ## Configs
-* `Python version - 3.10  
+* `Python version - 3.10`  
 * `torch version - 1.11.0`    
 * `cuda version - 10.2`  
 
