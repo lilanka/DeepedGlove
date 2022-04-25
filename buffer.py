@@ -18,10 +18,10 @@ class Buffer(object):
     n_costs: Number of cost functions
     otimize_mem_usage: https://github.com/DLR-RM/stable-baselines3/pull/28#issuecomment-637559274
 
-  Buffer has the type {'s','a','ns', 'r', c}. 
+  Buffer has the type {'s','a','ns', 'r', 'c'}. 
   """
 
-  def __init__(self, buffer_size: int, observation_space, action_space, n_costs: int, optimize_mem_usage: bool, device: Union[torch.device, str] = 'cpu'):
+  def __init__(self, buffer_size, observation_space, action_space, n_costs, optimize_mem_usage, device: Union[torch.device, str] = 'cpu'):
 
     # Check that the replay buffer can fit into the memory
     if psutil is not None:
@@ -60,13 +60,13 @@ class Buffer(object):
       if total_memory_usage > mem_available:
         warnings.warn(f'Not enough memory. Buffer size {total_memory_usage / 1e9}GB > Memory available {mem_available / 1e9}GB') 
 
-  def size(self) -> int:
+  def size(self):
     """Return the current size of the buffer"""
     if self.is_buffer_full:
       return self.buffer_size
     return self.end_position
 
-  def add(self, obs: np.ndarray, action: np.ndarray, next_obs: np.ndarray, reward: np.ndarray, cost: np.ndarray) -> None:
+  def add(self, obs, action, next_obs, reward, cost):
     """Add elements to the buffer"""
 
     if self.is_buffer_full:
@@ -88,12 +88,12 @@ class Buffer(object):
       self.is_buffer_full = True
       self.end_position = 0
 
-  def reset(self) -> None:
+  def reset(self):
     """Reset the buffer"""
     self.end_position = 0
     self.is_buffer_full = False
 
-  def sample(self, n: int) -> tuple:
+  def sample(self, n):
     """Sample n number of samples from the buffer"""
     if self.is_buffer_full:
       batch_idxs = (np.random.randint(1, self.buffer_size,  size=n) + self.end_position) % self.buffer_size
@@ -114,6 +114,7 @@ class Buffer(object):
     )
     return data 
 
+""""
 if __name__ == '__main__':
   buffer = Buffer(10, np.ones((1, 10)), np.ones((1, 10)), 10, True, device='cpu')
 
@@ -129,3 +130,4 @@ if __name__ == '__main__':
 
   data = buffer.sample(1)
   debug(data, 'data')
+"""

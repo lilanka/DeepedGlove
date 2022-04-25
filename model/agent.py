@@ -18,10 +18,10 @@ class DynamicModel(nn.Module):
     x = nn.ReLU(self.fc5(x))
     return x
 
-class Agent(nn.Module):
+class Actor(nn.Module):
   """Policy model"""
   def __init__(self, input_dim: int, output_dim: int, bias=True):
-    super(Agent, self).__init__()
+    super(Actor, self).__init__()
     self.fc1 = nn.Linear(input_dim, 300, bias=bias)
     self.fc2 = nn.Linear(300, 300, bias=bias)
     self.fc3 = nn.Linear(300, output_dim, bias=bias)

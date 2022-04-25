@@ -1,4 +1,12 @@
 {
+  "is_training": "true",
+  "device": "cpu",
+  
+  "data": {
+    "training": "data/training/data.txt",
+    "testing": "data/testing"
+  },
+
   "sim": {
     "tac_dip": {
       "motor_range": { "high": 12, "low": 0 }, 
@@ -108,45 +116,40 @@
     }, 
     
     "arch": "RNN",
-    "optimizer": {
-      "type": "Adam",
-      "lr": 0.0001,
-      "weight_decay": 0.0001
-    } 
+    "optimizer": { "type": "Adam", "lr": 0.0001, "weight_decay": 0.0001 } 
   },
 
   "agent": {
     "actor": {
       "arch": "fully_connected",
-      "optimizer": {
-        "type": "Adam",
-        "lr": 0.000001
-      },
-      "layers": {256, 128, 64},
+      "optimizer": { "type": "Adam", "lr": 0.000001 },
       "steps": 100,
       "batch_size": 256
+
     },
 
     "critic": {
       "arch": "fully_connected",
-      "optimizer": {
-        "type": "Adam",
-        "lr": 0.00001
-      },
-      "layers": {256, 128, 64},
+      "optimizer": { "type": "Adam", "lr": 0.00001 },
       "steps": 100,
       "batch_size": 256
     },
 
     "vae": {
       "arch": "fully_connected",
-      "optimizer": {
-        "type": "Adam",
-        "lr": 0.001
-      },
-      "layers": {1024, 1024, 1024},
+      "optimizer": { "type": "Adam", "lr": 0.001 },
       "steps": 100,
       "batch_size": 256
     }
+  },
+
+  "buffer": {
+    "size": 1000,
+    "batch_size": 100,
+    "optimize_memory_usage": "true"
+  },
+
+  "costs": {
+    "number_of_costs": 5
   }
 }
