@@ -1,4 +1,5 @@
 import numpy as np
+import torch.nn as nn 
 
 from utils import *
 from buffer import Buffer
@@ -13,10 +14,10 @@ class Controller():
     is_training: Training stage.
   """
   def __init__(self, configs, is_training=True): 
-
+    self.configs = configs
     self.device = configs["device"]
     self.buffer_size, self.batch_size = configs["buffer"]["size"], configs["buffer"]["batch_size"]
-    self.action_dim = 50 # Assume total 50 motors that can be controllerd.
+    self.action_dim = 50 # Assume total 50 motors that can be controlled.
 
     self.actions = np.zeros((self.buffer_size, self.action_dim))  
     self.rewards = np.zeros((self.buffer_size, 1))
@@ -42,19 +43,38 @@ class Controller():
     self.target_reward_critic2 = Critic(self.obs_dim, self.action_dim)
     self.target_cost_critic = Critic(self.obs_dim, self.action_dim)
 
+    # Optimizers
+    self.actor_optim = torch.optim.Adam(self.actor.parameters(), lr=configs["actor"]["optimizer"]["lr"])
+    self.reward_critic1_optim = torch.optim.Adam(self.reward_critic1.parameters(), lr=configs["critic"]["optimizer"]["lr"])
+    self.reward_critic2_optim = torch.optim.Adam(self.reward_critic2.parameters(), lr=configs["critic"]["optimizer"]["lr"])
+    self.cost_critic_optim = torch.optim.Adam(self.cost_critic.parameters(), lr=configs["critic"]["optimizer"]["lr"])
+
+    self.loss_fn = nn.MSELoss() # Use this for now
+
   def _initialize_buffer(self):
     """Initialize the buffer"""
     if self.buffer.size() == 0:
       for idx in range(self.buffer_size):
         self.buffer.add(self.data[idx], self.actions[idx], self.data[idx]+1, self.rewards[idx], self.costs[idx])  
 
-  def train():
+  def train(self, pre_train=False):
     """Train the system"""
-    pass 
+    if pre_train:
+      pre_train_iter = self.configs["training"]["pre_train_iter"]
+      for i in range(pre_train_iter):
+        batch = self.buffer.sample(self.batch_size)
+        for j in range(self.batch_size):
+          self.actor_optim.zero_grad()
+          policy_prediction = self.actor(batch[0])
+          loss = self.loss_fn(policy_prediction, batch[1])
+          loss.backward()
+          self.actor_optim.spep()
 
-  def validate():
+          print(f'Batch number {i}, loss = {loss}')
+
+  def validate(self):
     """Validate the system"""
     pass
 
-  def test():
+  def test(self):
     pass

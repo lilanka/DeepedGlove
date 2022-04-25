@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 class DynamicModel(nn.Module):
   def __init__(self, input_dim: int, output_dim: int, bias=True):
@@ -11,11 +12,11 @@ class DynamicModel(nn.Module):
     self.fc5 = nn.Linear(200, output_dim)
 
   def forward(self, x):
-    x = nn.ReLU(self.fc1(x))
-    x = nn.ReLU(self.fc2(x))
-    x = nn.ReLU(self.fc3(x))
-    x = nn.ReLU(self.fc4(x))
-    x = nn.ReLU(self.fc5(x))
+    x = F.relu(self.fc1(x))
+    x = F.relu(self.fc2(x))
+    x = F.relu(self.fc3(x))
+    x = F.relu(self.fc4(x))
+    x = F.relu(self.fc5(x))
     return x
 
 class Actor(nn.Module):
@@ -27,8 +28,8 @@ class Actor(nn.Module):
     self.fc3 = nn.Linear(300, output_dim, bias=bias)
 
   def forward(self, x):
-    x = nn.ReLU(self.fc1(x))
-    x = nn.ReLU(self.fc2(x))
+    x = F.relu(self.fc1(x))
+    x = F.relu(self.fc2(x))
     x = torch.tanh(self.fc3(x)) 
     return x
 

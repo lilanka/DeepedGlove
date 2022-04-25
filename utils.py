@@ -17,11 +17,11 @@ def read_json(fname: str):
     data = json.load(f)
   return data
 
-def to_torch(array: np.ndarray, copy: bool = True) -> torch.Tensor:
+def to_torch(array, copy=True, device='cpu'):
   """Convert a numpy array to Pytorch tensor"""
   if copy:
-    return torch.tensor(array).to(self.device)
-  return torch.as_tensor(array).to(self.device)
+    return torch.tensor(array).to(device).float()
+  return torch.as_tensor(array).to(device).float()
 
 def debug(x, message):
   """For debuggin purposes"""

@@ -7,6 +7,11 @@
     "testing": "data/testing"
   },
 
+  "training": {
+    "pre_train_iter": 10,
+    "train_iter": 10
+  },
+
   "sim": {
     "tac_dip": {
       "motor_range": { "high": 12, "low": 0 }, 
@@ -119,28 +124,25 @@
     "optimizer": { "type": "Adam", "lr": 0.0001, "weight_decay": 0.0001 } 
   },
 
-  "agent": {
-    "actor": {
-      "arch": "fully_connected",
-      "optimizer": { "type": "Adam", "lr": 0.000001 },
-      "steps": 100,
-      "batch_size": 256
+  "actor": {
+    "arch": "fully_connected",
+    "optimizer": { "type": "Adam", "lr": 0.000001 },
+    "steps": 100,
+    "batch_size": 256
+  },
 
-    },
+  "critic": {
+    "arch": "fully_connected",
+    "optimizer": { "type": "Adam", "lr": 0.00001 },
+    "steps": 100,
+    "batch_size": 256
+  },
 
-    "critic": {
-      "arch": "fully_connected",
-      "optimizer": { "type": "Adam", "lr": 0.00001 },
-      "steps": 100,
-      "batch_size": 256
-    },
-
-    "vae": {
-      "arch": "fully_connected",
-      "optimizer": { "type": "Adam", "lr": 0.001 },
-      "steps": 100,
-      "batch_size": 256
-    }
+  "vae": {
+    "arch": "fully_connected",
+    "optimizer": { "type": "Adam", "lr": 0.001 },
+    "steps": 100,
+    "batch_size": 256
   },
 
   "buffer": {

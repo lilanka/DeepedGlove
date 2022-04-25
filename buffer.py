@@ -104,13 +104,13 @@ class Buffer(object):
       next_obs = self.observations[(batch_idxs + 1) % self.buffer_size, :]
     else:
       next_obs = self.observations[batch_idxs, :]
-    debug(batch_idxs, "batch ids")
+
     data = (
-      self.observations[batch_idxs, :],
-      self.actions[batch_idxs, :],
-      next_obs,
-      self.rewards[batch_idxs].reshape(-1, 1),
-      self.costs[batch_idxs]
+      to_torch(self.observations[batch_idxs, :]),
+      to_torch(self.actions[batch_idxs, :]),
+      to_torch(next_obs),
+      to_torch(self.rewards[batch_idxs].reshape(-1, 1)),
+      to_torch(self.costs[batch_idxs])
     )
     return data 
 
