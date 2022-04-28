@@ -1,3 +1,4 @@
+import sys
 import random
 import psutil
 from typing import Union
@@ -6,6 +7,10 @@ import torch
 import numpy as np
 
 from utils import *
+
+if not sys.warnoptions:
+  import warnings
+  warnings.simplefilter("ignore")
 
 class Buffer(object):
   """
