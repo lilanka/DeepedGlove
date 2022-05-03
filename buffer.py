@@ -40,10 +40,9 @@ class Buffer(object):
     self.n_costs = n_costs 
     self.device = device
     self.optimize_mem_usage = optimize_mem_usage
-
     self.end_position = 0
     self.is_buffer_full = False
-   
+
     # TODO: Add dtype to reduce memory usage
     self.observations = np.zeros((self.buffer_size, self.obs_dim[0], self.obs_dim[1])) 
     self.actions = np.zeros((self.buffer_size, self.action_dim[0], self.action_dim[1]))

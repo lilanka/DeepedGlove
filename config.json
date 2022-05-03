@@ -1,6 +1,5 @@
 {
   "is_training": "true",
-  "device": "cpu",
   
   "data": {
     "training": "data/training/data.txt",
@@ -8,7 +7,7 @@
   },
 
   "training": {
-    "pre_train_iter": 10,
+    "pre_train_iter": 100,
     "train_iter": 10
   },
 
@@ -121,7 +120,9 @@
     }, 
     
     "arch": "RNN",
-    "optimizer": { "type": "Adam", "lr": 0.0001, "weight_decay": 0.0001 } 
+    "optimizer": { "type": "Adam", "lr": 0.0001, "weight_decay": 0.0001 },
+    "lu": 3,
+    "lp": 3
   },
 
   "actor": {
