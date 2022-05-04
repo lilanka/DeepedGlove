@@ -5,7 +5,7 @@ import torch.nn as nn
 
 from utils import *
 from buffer import Buffer
-from model.simulator import Model 
+from model.simulator import Simulator 
 from model.agent import Actor, Critic
 
 class Controller():
@@ -23,7 +23,7 @@ class Controller():
     self.action_dim = 50 # Assume total 50 motors that can be controlled.
    
     # These all are dummy data for the research
-    self.obs_dim = 100
+    self.obs_dim = 100 # Whole plant has combined 100 sensory observations
     n_costs = configs["costs"]["number_of_costs"]
     self.data = np.random.rand(self.buffer_size, 1, self.obs_dim)
     self.actions = np.zeros((self.buffer_size, 1, self.action_dim))  
@@ -38,6 +38,7 @@ class Controller():
     """
     # Initialize buffer
     self.buffer = Buffer(self.buffer_size, self.data[0], self.actions[0], n_costs, configs["buffer"]["optimize_memory_usage"], self.device)
+    self.simulator_buffer = Buffer(self.buffer_size, self.data[0], self.actions[0], n_costs, configs["buffer"]["optimize_memory_usage"], self.device)
     self._initialize_buffer()
 
     # Initialize networks 
@@ -59,7 +60,7 @@ class Controller():
     self.loss_fn = nn.MSELoss() # Not sure about which loss function 
 
     # Pre-train actor with real data
-    self.train(True)   
+    self.train(pre_train=True)   
     
     # Initialize target networks
     self.target_reward_critic1 = copy.deepcopy(self.reward_critic1)
@@ -67,12 +68,11 @@ class Controller():
     self.target_cost_critic = copy.deepcopy(self.cost_critic)
 
     # Simulator
-    #self.simulator = Model(
+    self.simulator = Simulator(self.batch_size, self.obs_dim + self.action_dim, self.obs_dim)
 
     target_initialized = equal(self.target_reward_critic1, self.reward_critic1) == \
     equal(self.target_reward_critic2, self.reward_critic2) == equal(self.cost_critic, self.cost_critic)
     print('Target networks contain parameters initialized.' if target_initialized else 'Target networks contain parameters not initialized.')
-
 
   def _initialize_buffer(self):
     """Initialize the buffer"""
@@ -115,7 +115,7 @@ class Controller():
   def _restrictive_exploration(batch):
     # Threashholds
     lu, lp = self.configs["sim"]["lu"], self.configs["sim"]["lp"]
-  
+     
 
   def validate(self):
     """Validate the system"""

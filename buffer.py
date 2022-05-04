@@ -117,21 +117,3 @@ class Buffer(object):
       to_torch(self.costs[batch_idxs])
     )
     return data 
-
-""""
-if __name__ == '__main__':
-  buffer = Buffer(10, np.ones((1, 10)), np.ones((1, 10)), 10, True, device='cpu')
-
-  obs = np.random.randint(1, 100, size=10)
-  actions = np.random.randint(1, 100, size=10)
-  next_obs = np.random.randint(1, 100, size=10)
-  rewards = np.ones((10, 1))
-  cost = np.ones((1, 10)) + 4.2
-  
-  buffer.add(obs, actions, next_obs, [1], cost)
-  buffer.add(obs, actions, next_obs, [10], cost)
-  buffer.add(obs, actions, next_obs, [2], cost)
-
-  data = buffer.sample(1)
-  debug(data, 'data')
-"""

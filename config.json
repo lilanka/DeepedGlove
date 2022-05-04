@@ -12,6 +12,10 @@
   },
 
   "sim": {
+    "n_ovens": 3,
+    "n_leaching_tanks": 3,
+    "n_dipping_tanks": 4,
+
     "tac_dip": {
       "motor_range": { "high": 12, "low": 0 }, 
       "temperature_range": { "high": 100, "low": 0 },
