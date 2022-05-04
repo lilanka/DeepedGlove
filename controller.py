@@ -20,16 +20,18 @@ class Controller():
 
     self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     self.buffer_size, self.batch_size = configs["buffer"]["size"], configs["buffer"]["batch_size"]
-    self.action_dim = 50 # Assume total 50 motors that can be controlled.
    
-    # These all are dummy data for the research
+    # Dummy data for the research ------------------------------------
     self.obs_dim = 100 # Whole plant has combined 100 sensory observations
+    self.action_dim = 50 # Assume total 50 motors that can be controlled.
+
     n_costs = configs["costs"]["number_of_costs"]
     self.data = np.random.rand(self.buffer_size, 1, self.obs_dim)
     self.actions = np.zeros((self.buffer_size, 1, self.action_dim))  
     self.rewards = np.zeros((self.buffer_size, 1, 1))
     self.costs = np.zeros((self.buffer_size, 1, n_costs))
-    
+    # ------------------------------------------------------------------------------ 
+
     """
     if is_training:
       self.data, self.obs_dim = read_data(configs["data"]["training"]) 
@@ -51,6 +53,9 @@ class Controller():
     self.target_reward_critic2 = Critic(self.obs_dim, self.action_dim, device=self.device)
     self.target_cost_critic = Critic(self.obs_dim, self.action_dim, device=self.device)
 
+    # Simulator
+    self.simulator = Simulator(configs, self.device)
+
     # Optimizers
     self.actor_optim = torch.optim.Adam(self.actor.parameters(), lr=configs["actor"]["optimizer"]["lr"])
     self.reward_critic1_optim = torch.optim.Adam(self.reward_critic1.parameters(), lr=configs["critic"]["optimizer"]["lr"])
@@ -66,9 +71,6 @@ class Controller():
     self.target_reward_critic1 = copy.deepcopy(self.reward_critic1)
     self.target_reward_critic2 = copy.deepcopy(self.reward_critic2)
     self.target_cost_critic = copy.deepcopy(self.cost_critic)
-
-    # Simulator
-    self.simulator = Simulator(self.batch_size, self.obs_dim + self.action_dim, self.obs_dim)
 
     target_initialized = equal(self.target_reward_critic1, self.reward_critic1) == \
     equal(self.target_reward_critic2, self.reward_critic2) == equal(self.cost_critic, self.cost_critic)
@@ -86,6 +88,8 @@ class Controller():
       pre_train_iter_n = self.configs["training"]["pre_train_iter"]
       for i in range(pre_train_iter_n):
         batch = self.buffer.sample(self.batch_size)
+        self.simulator((batch[0], batch[1]))
+        return 
         for j in range(self.batch_size):
           self.actor_optim.zero_grad()
           self.reward_critic1_optim.zero_grad()
@@ -111,6 +115,7 @@ class Controller():
       for i in range(train_iter):
         batch = self.buffer.sample(self.batch_size)
         self._restrictive_exploration(batch)
+
      
   def _restrictive_exploration(batch):
     # Threashholds
