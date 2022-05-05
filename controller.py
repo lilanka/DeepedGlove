@@ -2,6 +2,7 @@ import copy
 
 import numpy as np
 import torch.nn as nn 
+import torch.nn.functional as F
 
 from utils import *
 from buffer import Buffer
@@ -62,10 +63,12 @@ class Controller():
     self.reward_critic2_optim = torch.optim.Adam(self.reward_critic2.parameters(), lr=configs["critic"]["optimizer"]["lr"])
     self.cost_critic_optim = torch.optim.Adam(self.cost_critic.parameters(), lr=configs["critic"]["optimizer"]["lr"])
 
-    self.loss_fn = nn.MSELoss() # Not sure about which loss function 
+    self.gamma = configs["actor"]["discount_factor"] # discount factor
+    self.lmult = configs["actor"]["lagrangian_multiplier"] # lagrangian multiplier 
+    self.threshold = configs["costs"]["threshold"]
 
     # Pre-train actor with real data
-    self.train(pre_train=True)   
+    self.train(pre_train=False)   
     
     # Initialize target networks
     self.target_reward_critic1 = copy.deepcopy(self.reward_critic1)
@@ -88,39 +91,67 @@ class Controller():
       pre_train_iter_n = self.configs["training"]["pre_train_iter"]
       for i in range(pre_train_iter_n):
         batch = self.buffer.sample(self.batch_size)
-        self.simulator((batch[0], batch[1]))
-        return 
-        for j in range(self.batch_size):
-          self.actor_optim.zero_grad()
-          self.reward_critic1_optim.zero_grad()
-          self.reward_critic2_optim.zero_grad()
-          self.cost_critic_optim.zero_grad()
 
-          # Predictions 
-          policy_prediction = self.actor(batch[0][j])
-          reward_critic1_prediction = self.reward_critic1(batch[0][j])
-          reward_critic2_prediction = self.reward_critic2(batch[0][j])
-          cost_critic_prediction = self.cost_critic(batch[0][j])
-          
-          loss = self.loss_fn(policy_prediction, batch[1][j])
-          loss.backward()
-          self.actor_optim.step()
-          
-          # Add https://medium.com/bcggamma/lagrangian-relaxation-can-solve-your-optimization-problem-much-much-faster-daa9edc47cc9 
-          # for optimization of Q1, Q2, Qc
-          print(f'Iter number: {i+1}, Batch number {j+1}, Policy loss = {loss}')
+        self.actor_optim.zero_grad()
 
+        # Predictions 
+        policy_prediction = self.actor(batch[0])
+        loss = F.mse_loss(policy_prediction, batch[1])
+        loss.backward()
+        self.actor_optim.step()
+
+        print(f'Iter number: {i+1}, Policy loss = {loss}')
+     
+      torch.save(self.actor, 'modeldata/actor.pkl')
     else:
       train_iter = self.configs["training"]["train_iter"]
       for i in range(train_iter):
         batch = self.buffer.sample(self.batch_size)
-        self._restrictive_exploration(batch)
 
+        self.reward_critic2_optim.zero_grad()
+        self.cost_critic_optim.zero_grad()
+
+        # self._restrictive_exploration(batch) 
+
+        # Just train the model without restrictive exploration methods
+        target_policy = self.actor(batch[2])
+        y = torch.min(self.target_reward_critic1(batch[2], target_policy), self.target_reward_critic2(batch[2], target_policy))
+        z = self.target_cost_critic(batch[2], target_policy)
+  
+        Qr_target_v = batch[3] + self.gamma * y
+
+        Qr1_v = self.reward_critic1(batch[0], batch[1])
+        Qr1_loss = F.mse_loss(Qr1_v, Qr_target_v)
+
+        Qr2_v = self.reward_critic2(batch[0], batch[1])
+        Qr2_loss = F.mse_loss(Qr2_v, Qr_target_v)
+
+        Qc_target_v = batch[4] + self.gamma * z
+        Qc_v = self.cost_critic(batch[0], batch[1])
+        Qc_loss = F.mse_loss(Qc_v, Qc_target_v)
+
+        self.reward_critic1_optim.zero_grad()
+        Qr1_loss.backward(retain_graph=True)
+        self.reward_critic1_optim.step()
+
+        self.reward_critic2_optim.zero_grad()
+        Qr2_loss.backward(retain_graph=True)
+        self.reward_critic2_optim.step()
+
+        self.cost_critic_optim.zero_grad()
+        Qc_loss.backward()
+        self.cost_critic_optim.step()
+
+        print(f'Iter number: {i+1}, Qr1 loss = {Qr1_loss}, Qr2_loss = {Qr2_loss}, Qc_loss = {Qc_loss}')
+
+        L = (torch.min(Qr1_v, Qr2_v) - self.lmult * (Qc_v - self.threshold)).mean()
      
   def _restrictive_exploration(batch):
+    """Restrictive exploration"""
     # Threashholds
     lu, lp = self.configs["sim"]["lu"], self.configs["sim"]["lp"]
-     
+    for i in range(self.batch_size):
+      s1 = batch[0][i]
 
   def validate(self):
     """Validate the system"""

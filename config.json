@@ -7,8 +7,8 @@
   },
 
   "training": {
-    "pre_train_iter": 10,
-    "train_iter": 10
+    "pre_train_iter": 100,
+    "train_iter": 100
   },
 
   "sim": {
@@ -31,7 +31,9 @@
     "arch": "fully_connected",
     "optimizer": { "type": "Adam", "lr": 0.000001 },
     "steps": 100,
-    "batch_size": 256
+    "batch_size": 256,
+    "discount_factor": 0.001,
+    "lagrangian_multiplier": 2
   },
 
   "critic": {
@@ -55,6 +57,7 @@
   },
 
   "costs": {
-    "number_of_costs": 5
+    "number_of_costs": 5,
+    "threshold": 2
   }
 }

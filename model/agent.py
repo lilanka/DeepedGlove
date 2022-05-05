@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class DynamicModel(nn.Module):
-  def __init__(self, input_dim: int, output_dim: int, bias=True, device='cpu'):
+  def __init__(self, input_dim, output_dim, bias=True, device='cpu'):
     super(Agent, self).__init__()
     self.fc1 = nn.Linear(input_dim, 200, bias=bias).to(device)
     self.fc2 = nn.Linear(200, 200, bias=bias).to(device)
@@ -21,7 +21,7 @@ class DynamicModel(nn.Module):
 
 class Actor(nn.Module):
   """Policy model"""
-  def __init__(self, input_dim: int, output_dim: int, bias=True, device='cpu'):
+  def __init__(self, input_dim, output_dim, bias=True, device='cpu'):
     super(Actor, self).__init__()
     self.fc1 = nn.Linear(input_dim, 300, bias=bias).to(device)
     self.fc2 = nn.Linear(300, 300, bias=bias).to(device)
@@ -35,14 +35,15 @@ class Actor(nn.Module):
 
 class Critic(nn.Module):
   """Reward and Cost critic networks"""
-  def __init__(self, input_dim: int, output_dim: int, bias=True, device='cpu'):
+  def __init__(self, state_size, action_size, bias=True, device='cpu'):
     super(Critic, self).__init__()
-    self.fc1 = nn.Linear(input_dim, 400, bias=bias).to(device)
+    self.fc1 = nn.Linear(state_size+action_size, 400, bias=bias).to(device)
     self.fc2 = nn.Linear(400, 400, bias=bias).to(device)
-    self.fc3 = nn.Linear(400, output_dim, bias=bias).to(device)
+    self.fc3 = nn.Linear(400, 1, bias=bias).to(device)
   
-  def forward(self, x):
+  def forward(self, states, actions):
+    x = torch.cat((states, actions), -1)
     x = F.relu(self.fc1(x))
     x = F.relu(self.fc2(x))
-    x = F.relu(self.fc3(x))
+    x = self.fc3(x)
     return x
