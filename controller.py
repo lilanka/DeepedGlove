@@ -42,6 +42,7 @@ class Controller():
     # Initialize buffer
     self.buffer = Buffer(self.buffer_size, self.data[0], self.actions[0], n_costs, configs["buffer"]["optimize_memory_usage"], self.device)
     self.simulator_buffer = Buffer(self.buffer_size, self.data[0], self.actions[0], n_costs, configs["buffer"]["optimize_memory_usage"], self.device)
+
     self._initialize_buffer()
 
     # Initialize networks 
@@ -68,7 +69,7 @@ class Controller():
     self.threshold = configs["costs"]["threshold"]
 
     # Pre-train actor with real data
-    self.train(pre_train=False)   
+    self.train(pre_train=True)   
     
     # Initialize target networks
     self.target_reward_critic1 = copy.deepcopy(self.reward_critic1)
@@ -104,6 +105,7 @@ class Controller():
      
       torch.save(self.actor, 'modeldata/actor.pkl')
     else:
+      loss = []
       train_iter = self.configs["training"]["train_iter"]
       for i in range(train_iter):
         batch = self.buffer.sample(self.batch_size)
@@ -143,9 +145,12 @@ class Controller():
         self.cost_critic_optim.step()
 
         print(f'Iter number: {i+1}, Qr1 loss = {Qr1_loss}, Qr2_loss = {Qr2_loss}, Qc_loss = {Qc_loss}')
+        loss.append(Qr1_loss.detach().numpy()) 
 
         L = (torch.min(Qr1_v, Qr2_v) - self.lmult * (Qc_v - self.threshold)).mean()
-     
+   
+      plot(np.arange(train_iter), loss)
+
   def _restrictive_exploration(batch):
     """Restrictive exploration"""
     # Threashholds

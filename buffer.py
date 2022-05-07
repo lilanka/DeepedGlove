@@ -23,7 +23,7 @@ class Buffer(object):
     n_costs: Number of cost functions
     otimize_mem_usage: https://github.com/DLR-RM/stable-baselines3/pull/28#issuecomment-637559274
 
-  Buffer has the type {'s','a','ns', 'r', 'c'}. 
+  Buffer has the type {s, a, ns, r, c}. 
   """
 
   def __init__(self, buffer_size, observation_space, action_space, n_costs, optimize_mem_usage, device: Union[torch.device, str] = 'cpu'):
@@ -44,16 +44,16 @@ class Buffer(object):
     self.is_buffer_full = False
 
     # TODO: Add dtype to reduce memory usage
-    self.observations = np.zeros((self.buffer_size, self.obs_dim[0], self.obs_dim[1])) 
-    self.actions = np.zeros((self.buffer_size, self.action_dim[0], self.action_dim[1]))
-    self.rewards = np.zeros((self.buffer_size, 1))
-    self.costs = np.zeros((self.buffer_size, n_costs))
+    self.observations = np.zeros((self.buffer_size, self.obs_dim[0], self.obs_dim[1]), dtype=float)  # s
+    self.actions = np.zeros((self.buffer_size, self.action_dim[0], self.action_dim[1]), dtype=float) # a
+    self.rewards = np.zeros((self.buffer_size, 1), dtype=float) # r
+    self.costs = np.zeros((self.buffer_size, n_costs), dtype=float) # c
 
     if optimize_mem_usage:
       # observations contains also the next observation
-      self.next_observations = None
+      self.next_observations = None # ns
     else:
-      self.next_observations = np.zeros(self.observations.shape)
+      self.next_observations = np.zeros(self.observations.shape) # ns
 
     if psutil is not None:
       total_memory_usage = self.observations.nbytes + self.actions.nbytes +  self.rewards.nbytes + self.costs.nbytes
@@ -72,7 +72,6 @@ class Buffer(object):
 
   def add(self, obs, action, next_obs, reward, cost):
     """Add elements to the buffer"""
-
     if self.is_buffer_full:
       print('The bufer is full')
       return None

@@ -8,12 +8,12 @@
 
   "training": {
     "pre_train_iter": 100,
-    "train_iter": 100
+    "train_iter": 1000
   },
 
   "sim": {
     "dipping": { "n_temp": 40, "n_motor": 25 },
-    "leaching": { "n_temp": 40, "n_motor": 15 },
+    "leaching": { "n_temp": 40, "n_motor": 15, "flow_rate": 10 },
     "oven": { "n_temp": 20, "n_motor": 10 },
 
     "args": {
@@ -53,7 +53,7 @@
   "buffer": {
     "size": 1000,
     "batch_size": 100,
-    "optimize_memory_usage": "true"
+    "optimize_memory_usage": "false"
   },
 
   "costs": {

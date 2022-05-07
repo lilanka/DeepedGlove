@@ -3,6 +3,7 @@ import copy
 
 import torch
 import numpy as np
+import matplotlib.pyplot as plt
 
 def read_data(fname: str):
   """Read raw data file and take data"""
@@ -34,3 +35,8 @@ def equal(model1, model2):
     if p1.data.ne(p2.data).sum() > 0:
       return False
   return True
+
+def plot(x, y):
+  """Plot graphs"""
+  plt.plot(x, y)
+  plt.show()
