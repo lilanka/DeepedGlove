@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import copy
 
 import numpy as np
@@ -31,6 +33,7 @@ class Controller():
     self.actions = np.zeros((self.buffer_size, 1, self.action_dim))  
     self.rewards = np.zeros((self.buffer_size, 1, 1))
     self.costs = np.zeros((self.buffer_size, 1, n_costs))
+    self.ro = 0.5
     # ------------------------------------------------------------------------------ 
 
     """
@@ -69,7 +72,7 @@ class Controller():
     self.threshold = configs["costs"]["threshold"]
 
     # Pre-train actor with real data
-    self.train(pre_train=True)   
+    self.train(pre_train=False)   
     
     # Initialize target networks
     self.target_reward_critic1 = copy.deepcopy(self.reward_critic1)
@@ -141,14 +144,18 @@ class Controller():
         self.reward_critic2_optim.step()
 
         self.cost_critic_optim.zero_grad()
-        Qc_loss.backward()
+        Qc_loss.backward(retain_graph=True)
         self.cost_critic_optim.step()
 
-        print(f'Iter number: {i+1}, Qr1 loss = {Qr1_loss}, Qr2_loss = {Qr2_loss}, Qc_loss = {Qc_loss}')
+        L = torch.tensor((torch.min(Qr1_v, Qr2_v) - self.lmult * (Qc_v - self.threshold)).mean().detach(), requires_grad=True)
+
+        self.actor_optim.zero_grad()
+        L.backward()
+        self.actor_optim.step()
+
+        print(f'Iter number: {i+1}, Qr1 loss = {Qr1_loss}, Qr2_loss = {Qr2_loss}, Qc_loss = {Qc_loss}, L={L}')
         loss.append(Qr1_loss.detach().numpy()) 
 
-        L = (torch.min(Qr1_v, Qr2_v) - self.lmult * (Qc_v - self.threshold)).mean()
-   
       plot(np.arange(train_iter), loss)
 
   def _restrictive_exploration(batch):
@@ -160,7 +167,28 @@ class Controller():
 
   def validate(self):
     """Validate the system"""
-    pass
+    loss = []
+    val_iter = self.configs["training"]["val_iter"]
+    for i in range(val_iter):
+      batch = self.buffer.sample(self.batch_size)
+
+      target_policy = self.actor(batch[2])
+      y = torch.min(self.target_reward_critic1(batch[2], target_policy), self.target_reward_critic2(batch[2], target_policy))
+      z = self.target_cost_critic(batch[2], target_policy)
+
+      Qr_target_v = batch[3] + self.gamma * y
+      Qc_target_v = batch[4] + self.gamma * z
+
+      Qr1_v = self.reward_critic1(batch[0], batch[1])
+      Qr1_loss = F.mse_loss(Qr1_v, Qr_target_v)
+
+      Qr2_v = self.reward_critic2(batch[0], batch[1])
+      Qr2_loss = F.mse_loss(Qr2_v, Qr_target_v)
+      
+      Qc_v = self.cost_critic(batch[0], batch[1])
+      Qc_loss = F.mse_loss(Qc_v, Qc_target_v)
+    
+      print(f'Iter number: {i+1}, Qr1 loss = {Qr1_loss}, Qr2_loss = {Qr2_loss}, Qc_loss = {Qc_loss}')
 
   def test(self):
     pass

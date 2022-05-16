@@ -5,6 +5,11 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
+def softcopy(target, source, tau):
+  """Copy parameters"""
+  for target_param, param in zip(target, source):
+    target_param.data.copy_(tau * param.data + (1 - tau) * target_param.data)
+
 def read_data(fname: str):
   """Read raw data file and take data"""
   data = []
