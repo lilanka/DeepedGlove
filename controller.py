@@ -1,5 +1,3 @@
-#!/bin/python3
-
 import copy
 
 import numpy as np
