@@ -75,7 +75,8 @@ class Buffer(object):
         host="localhost",
         user=input("Enter username: "),
         password=getpass("Enter password: "),
-        database=input("Database name: ")
+        database=input("Database name: "),
+        port=3306,
       ) 
       cursor = db.cursor()
 
