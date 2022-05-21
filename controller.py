@@ -19,7 +19,7 @@ class Controller():
   def __init__(self, configs, is_training=True): 
     self.configs = configs
 
-    self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    self.device = 'cpu'#torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     self.buffer_size, self.batch_size = configs["buffer"]["size"], configs["buffer"]["batch_size"]
    
     # Dummy data for the research ------------------------------------
