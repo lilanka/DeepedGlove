@@ -2,9 +2,11 @@ import sys
 import random
 import psutil
 from typing import Union
+from getpass import getpass
 
 import torch 
 import numpy as np
+from mysql.connector import connect, Error
 
 from utils import *
 
@@ -27,6 +29,7 @@ class Buffer(object):
   """
 
   def __init__(self, buffer_size, observation_space, action_space, n_costs, optimize_mem_usage, device: Union[torch.device, str] = 'cpu'):
+    self._import_from_sql() 
 
     # Check that the replay buffer can fit into the memory
     if psutil is not None:
@@ -63,6 +66,19 @@ class Buffer(object):
 
       if total_memory_usage > mem_available:
         warnings.warn(f'Not enough memory. Buffer size {total_memory_usage / 1e9}GB > Memory available {mem_available / 1e9}GB') 
+
+  def _import_from_sql(self):
+    """Connect SQL database"""
+    try:
+      print("Access SQL Database")
+      with connect(
+        host="localhost",
+        user=input("Enter username: "),
+        password=getpass("Enter password: "),
+      ) as connection:
+        print(connection)
+    except Error as e:
+      print(e)
 
   def size(self):
     """Return the current size of the buffer"""
