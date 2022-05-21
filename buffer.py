@@ -71,12 +71,20 @@ class Buffer(object):
     """Connect SQL database"""
     try:
       print("Access SQL Database")
-      with connect(
+      db = connect(
         host="localhost",
         user=input("Enter username: "),
         password=getpass("Enter password: "),
-      ) as connection:
-        print(connection)
+        database=input("Database name: ")
+      ) 
+      cursor = db.cursor()
+
+      # Show existing tables
+      cursor.execute("SHOW TABLES")
+
+      for x in cursor:
+        print(x);
+
     except Error as e:
       print(e)
 
